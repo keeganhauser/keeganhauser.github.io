@@ -21,7 +21,7 @@
 title: Keegan's Dev Showcase
 author:
   name: Keegan Hauser
-  email: keeghauser08@gmail.com
+  email: keegan.hauser.dev@gmail.com
 description: >- # this means to ignore newlines until "baseurl:"
   Thanks for visiting!
 baseurl: "" # the subpath of your site, e.g. /blog
@@ -34,6 +34,7 @@ plugins:
 
 header_pages:
   - about.md
+  - projects.md
 
 minima:
   skin: dark
