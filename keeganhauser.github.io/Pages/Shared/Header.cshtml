@@ -1,0 +1,46 @@
+<header class="top-0 fixed z-50 h-14 bg-white dark:bg-black opacity-90 w-full shadow pr-3">
+    <div class="flex flex-wrap items-center">
+        <div class="absolute z-10 top-2 left-2 sm:static flex-shrink flex-grow-0">
+            <div class="cursor-pointer">
+                <a class="navbar-brand flex items-center pl-4" href="./">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="m5.25 4.5 7.5 7.5-7.5 7.5m6-15 7.5 7.5-7.5 7.5" />
+                    </svg>
+                    <span class="hidden sm:block text-2xl font-semibold">Keegan's Dev Showcase</span>
+                </a>
+            </div>
+        </div>
+        <div class="flex flex-grow flex-shrink flex-nowrap justify-end items-center">
+            <nav class="relative flex flex-grow leading-6 font-semibold text-slate-700 dark:text-slate-200">
+                <ul class="flex flex-wrap items-center justify-end w-full m-0 pb-2 sm:pb-0">
+                    @{
+                        void RenderNavLink(string href, string childContent, string? cls = null)
+                        {
+                            <li class="@Html.ClassNames("relative flex flex-wrap just-fu-start m-0",cls)">
+                                <a href="@href" class="@Html.ClassNames("p-4 flex items-center justify-start mw-full hover:text-sky-500 dark:hover:text-sky-400", 
+                                    Html.MatchesPath(href) ? "text-blue-700 dark:text-blue-300" : "")">
+                                    @Html.Raw(childContent)
+                                </a>
+                            </li>
+                        }
+                        RenderNavLink("whatsnew", "What's New");
+                        RenderNavLink("projects", "Projects");
+                        // TODO: Add in some videos if I have any
+                        // RenderNavLink("videos", "Videos");
+                        RenderNavLink("blog", "Blog");
+                        RenderNavLink("posts/", "Archive");
+                        RenderNavLink("about", "About");
+                    }
+                    <li class="relative flex flex-wrap just-fu-start m-0">
+                        <div data-component="DarkModeToggle" class="ml-2 w-10"></div>
+                    </li>
+                </ul>
+            </nav>
+
+        </div>
+    </div>
+</header>
+<script type="module">
+import { mountAll } from "app.mjs"
+mountAll()
+</script>
