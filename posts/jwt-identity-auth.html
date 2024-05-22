@@ -1,0 +1,603 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/svg" href="img/logo.svg">
+    <link rel="alternate" type="application/rss+xml" title="RSS" href="https://razor-ssg.web-templates.io/feed.xml" />
+    <title>ASP.NET Core JWT Identity Auth</title>
+    <base href="https://keeganhauser.github.io/keeganhauser.github.io/" />
+    <script>
+    if (location.search === "?dark") localStorage.setItem('color-scheme','dark') 
+    if (location.search === "?light") localStorage.removeItem('color-scheme') 
+    const cls = document.querySelector('html').classList
+    if (localStorage.getItem('color-scheme') === 'dark')
+        cls.add('dark')
+    else
+        cls.remove('dark')
+    </script>
+    <link rel="stylesheet" href="css/app.css">
+
+    <script async src="https://ga.jspm.io/npm:es-module-shims@1.6.3/dist/es-module-shims.js"></script>
+    <script type="importmap">
+{
+    "imports": {
+        "app.mjs": "./mjs/app.mjs",
+        "vue": "./lib/mjs/vue.min.mjs",
+        "@servicestack/client": "./lib/mjs/servicestack-client.min.mjs",
+        "@servicestack/vue": "./lib/mjs/servicestack-vue.min.mjs"
+    }
+}
+</script>
+    
+    <meta name="twitter:site" content="@RazorSsg" />
+    <meta name="twitter:card" content="summary" />
+    <meta property="og:description" content="Learn about integration and value added features of ASP.NET Core JWT Identity Auth" />
+    <meta property="og:url" content="https://razor-ssg.web-templates.io/posts/jwt-identity-auth" />
+    <meta property="og:title" content="ASP.NET Core JWT Identity Auth" />
+    <meta property="og:image" content="https://images.unsplash.com/photo-1618482914248-29272d021005?crop=entropy&amp;fit=crop&amp;h=1000&amp;w=2000" />
+
+
+</head>
+<body class="bg-white dark:bg-gray-900 dark:text-white">
+<header class="top-0 fixed z-50 h-14 bg-white dark:bg-black opacity-90 w-full shadow pr-3">
+    <div class="flex flex-wrap items-center">
+        <div class="absolute z-10 top-2 left-2 sm:static flex-shrink flex-grow-0">
+            <div class="cursor-pointer">
+                <a class="navbar-brand flex items-center pl-4" href="./">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="m5.25 4.5 7.5 7.5-7.5 7.5m6-15 7.5 7.5-7.5 7.5" />
+                    </svg>
+                    <span class="hidden sm:block text-2xl font-semibold">Keegan's Dev Showcase</span>
+                </a>
+            </div>
+        </div>
+        <div class="flex flex-grow flex-shrink flex-nowrap justify-end items-center">
+            <nav class="relative flex flex-grow leading-6 font-semibold text-slate-700 dark:text-slate-200">
+                <ul class="flex flex-wrap items-center justify-end w-full m-0 pb-2 sm:pb-0">
+                            <li class="relative flex flex-wrap just-fu-start m-0">
+                                <a href="whatsnew" class="p-4 flex items-center justify-start mw-full hover:text-sky-500 dark:hover:text-sky-400">
+                                    What's New
+                                </a>
+                            </li>
+                            <li class="relative flex flex-wrap just-fu-start m-0">
+                                <a href="projects" class="p-4 flex items-center justify-start mw-full hover:text-sky-500 dark:hover:text-sky-400">
+                                    Projects
+                                </a>
+                            </li>
+                            <li class="relative flex flex-wrap just-fu-start m-0">
+                                <a href="blog" class="p-4 flex items-center justify-start mw-full hover:text-sky-500 dark:hover:text-sky-400">
+                                    Blog
+                                </a>
+                            </li>
+                            <li class="relative flex flex-wrap just-fu-start m-0">
+                                <a href="posts/" class="p-4 flex items-center justify-start mw-full hover:text-sky-500 dark:hover:text-sky-400">
+                                    Archive
+                                </a>
+                            </li>
+                            <li class="relative flex flex-wrap just-fu-start m-0">
+                                <a href="about" class="p-4 flex items-center justify-start mw-full hover:text-sky-500 dark:hover:text-sky-400">
+                                    About
+                                </a>
+                            </li>
+                    <li class="relative flex flex-wrap just-fu-start m-0">
+                        <div data-component="DarkModeToggle" class="ml-2 w-10"></div>
+                    </li>
+                </ul>
+            </nav>
+
+        </div>
+    </div>
+</header>
+<script type="module">
+import { mountAll } from "app.mjs"
+mountAll()
+</script>
+
+
+<div class="min-h-screen">
+    <main role="main" class="pt-14 pb-3">
+        
+
+
+
+<link rel="stylesheet" href="css/typography.css">
+<link rel="stylesheet" href="css/lite-yt-embed.css">
+<link rel="stylesheet" href="css/app.css">
+
+<div class="container px-5 mb-32 mx-auto">
+        <article class="mt-20">
+            <h1 class="text-6xl md:text-7xl lg:text-8xl font-bold tracking-tighter leading-tight md:leading-none mb-12 text-center md:text-left">
+                ASP.NET Core JWT Identity Auth
+            </h1>
+            <div class="flex justify-between">
+                <div class="md:mb-12 flex items-center">
+                        <a href="posts/author/brandon-foley"><img class="w-12 h-12 rounded-full mr-4 text-cyan-600" src="img/authors/author3.svg"></a>
+                    <div class="flex flex-col">
+                            <a class="text-xl font-semibold hover:underline" href="posts/author/brandon-foley">Brandon Foley</a>
+            <ul role="list" class="flex">
+                    <li>
+                        <a title="Follow on GitHub" class="mr-1 group flex text-sm font-medium text-zinc-800 transition hover:text-indigo-500 dark:text-zinc-200 dark:hover:text-indigo-500" href="https://github.com/brandon">
+                            <svg viewBox="0 0 24 24" aria-hidden="true" class="h-6 w-6 flex-none text-zinc-500 fill-zinc-500 transition group-hover:fill-indigo-500">
+                                <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.475 2 2 6.588 2 12.253c0 4.537 2.862 8.369 6.838 9.727.5.09.687-.218.687-.487 0-.243-.013-1.05-.013-1.91C7 20.059 6.35 18.957 6.15 18.38c-.113-.295-.6-1.205-1.025-1.448-.35-.192-.85-.667-.013-.68.788-.012 1.35.744 1.538 1.051.9 1.551 2.338 1.116 2.912.846.088-.666.35-1.115.638-1.371-2.225-.256-4.55-1.14-4.55-5.062 0-1.115.387-2.038 1.025-2.756-.1-.256-.45-1.307.1-2.717 0 0 .837-.269 2.75 1.051.8-.23 1.65-.346 2.5-.346.85 0 1.7.115 2.5.346 1.912-1.333 2.75-1.05 2.75-1.05.55 1.409.2 2.46.1 2.716.637.718 1.025 1.628 1.025 2.756 0 3.934-2.337 4.806-4.562 5.062.362.32.675.936.675 1.897 0 1.371-.013 2.473-.013 2.82 0 .268.188.589.688.486a10.039 10.039 0 0 0 4.932-3.74A10.447 10.447 0 0 0 22 12.253C22 6.588 17.525 2 12 2Z"></path>
+                            </svg>
+                        </a>
+                    </li>
+                    <li>
+                        <a title="Email Brandon Foley" href="mailto:brandon@email.org" class="mr-1 group flex text-sm font-medium text-zinc-800 transition hover:text-indigo-500 dark:text-zinc-200 dark:hover:text-indigo-500">
+                            <svg class="h-6 w-6 flex-none text-zinc-500 fill-zinc-500 transition group-hover:fill-indigo-500" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M4 20q-.825 0-1.413-.588T2 18V6q0-.825.588-1.413T4 4h16q.825 0 1.413.588T22 6v12q0 .825-.588 1.413T20 20H4Zm8-7L4 8v10h16V8l-8 5Zm0-2l8-5H4l8 5ZM4 8V6v12V8Z"/></svg>
+                        </a>
+                    </li>
+            </ul>
+                    </div>
+                </div>
+                <div class="mb-4 max-w-sm" data-mail="JoinMailingList" data-props="{ submitLabel:'Join our newsletter' }"></div>
+            </div>
+            <div class="mb-8 md:mb-16 sm:mx-0">
+                <div class="sm:mx-0">
+                    <img src="https://images.unsplash.com/photo-1618482914248-29272d021005?crop=entropy&amp;fit=crop&amp;h=1000&amp;w=2000" alt="ASP.NET Core JWT Identity Auth Background" class="shadow-small">
+                </div>
+            </div>
+            <div class="flex max-w-3xl mx-auto justify-between">
+                <div>
+                    <div class="mb-4 flex flex-wrap">
+                            <a href="posts/tagged/servicestack" class="mr-2 text-xs leading-5 font-semibold bg-slate-400/10 rounded-full py-1 px-3 flex items-center space-x-2 hover:bg-slate-400/20 dark:highlight-white/5">servicestack</a>
+                            <a href="posts/tagged/net8" class="mr-2 text-xs leading-5 font-semibold bg-slate-400/10 rounded-full py-1 px-3 flex items-center space-x-2 hover:bg-slate-400/20 dark:highlight-white/5">.net8</a>
+                            <a href="posts/tagged/auth" class="mr-2 text-xs leading-5 font-semibold bg-slate-400/10 rounded-full py-1 px-3 flex items-center space-x-2 hover:bg-slate-400/20 dark:highlight-white/5">auth</a>
+                    </div>
+                        <div class="max-w-3xl mx-auto">
+                            <div class="mb-6 text-lg text-gray-500">
+                                <time datetime="2024-02-11T00:00:00.0000000">February 11, 2024</time>
+                                <span aria-hidden="true">&middot;</span>
+                                <span>5 min read</span>
+                            </div>
+                        </div>
+                </div>
+            </div>
+            <div class="max-w-3xl mx-auto">
+                <div id="post" class="prose lg:prose-xl max-w-none mb-32">
+                    <p>JWTs enable stateless authentication of clients without servers needing to maintain any Auth state in server infrastructure
+or perform any I/O to validate a token. As such,
+<a href="https://docs.servicestack.net/auth/jwt-authprovider#stateless-auth-microservices">JWTs are a popular choice for Microservices</a>
+as they only need to configured with confidential keys to validate access.</p>
+<h3 id="asp.net-core-jwt-authentication">ASP.NET Core JWT Authentication<a class="header-anchor" href="javascript:;" onclick="location.hash='#asp.net-core-jwt-authentication'" aria-label="Permalink">&ZeroWidthSpace;</a></h3>
+<p>ServiceStack's JWT Identity Auth reimplements many of the existing <a href="https://docs.servicestack.net/auth/jwt-authprovider">ServiceStack JWT AuthProvider</a>
+features but instead of its own implementation, integrates with and utilizes ASP.NET Core's built-in JWT Authentication that's
+configurable in .NET Apps with the <code>.AddJwtBearer()</code> extension method, e.g:</p>
+<h4 id="program.cs">Program.cs<a class="header-anchor" href="javascript:;" onclick="location.hash='#program.cs'" aria-label="Permalink">&ZeroWidthSpace;</a></h4>
+<pre><code class="language-csharp">services.AddAuthentication()
+    .AddJwtBearer(options =&gt; {
+        options.TokenValidationParameters = new()
+        {
+            ValidIssuer = config[&quot;JwtBearer:ValidIssuer&quot;],
+            ValidAudience = config[&quot;JwtBearer:ValidAudience&quot;],
+            IssuerSigningKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(config[&quot;JwtBearer:IssuerSigningKey&quot;]!)),
+            ValidateIssuerSigningKey = true,
+        };
+    })
+    .AddIdentityCookies(options =&gt; options.DisableRedirectsForApis());
+</code></pre>
+<p>Then use the <code>JwtAuth()</code> method to enable and configure ServiceStack's support for ASP.NET Core JWT Identity Auth:</p>
+<h4 id="configure.auth.cs">Configure.Auth.cs<a class="header-anchor" href="javascript:;" onclick="location.hash='#configure.auth.cs'" aria-label="Permalink">&ZeroWidthSpace;</a></h4>
+<pre><code class="language-csharp">public class ConfigureAuth : IHostingStartup
+{
+    public void Configure(IWebHostBuilder builder) =&gt; builder
+        .ConfigureServices(services =&gt; {
+            services.AddPlugin(new AuthFeature(IdentityAuth.For&lt;ApplicationUser&gt;(
+                options =&gt; {
+                    options.SessionFactory = () =&gt; new CustomUserSession();
+                    options.CredentialsAuth();
+                    options.JwtAuth(x =&gt; {
+                        // Enable JWT Auth Features...
+                    });
+                })));
+        });
+}
+</code></pre>
+<h3 id="enable-in-swagger-ui">Enable in Swagger UI<a class="header-anchor" href="javascript:;" onclick="location.hash='#enable-in-swagger-ui'" aria-label="Permalink">&ZeroWidthSpace;</a></h3>
+<p>Once configured we can enable JWT Auth in Swagger UI by installing <strong>Swashbuckle.AspNetCore</strong>:</p>
+<div class="not-prose copy cp flex cursor-pointer mb-3" onclick="copy(this)">
+                <div class="flex-grow bg-gray-700">
+                    <div class="pl-4 py-1 pb-1.5 align-middle text-lg text-white"><p><code>&lt;PackageReference Include=&quot;Swashbuckle.AspNetCore&quot; Version=&quot;6.*&quot; /&gt;</code></p>
+</div>
+                    </div>
+                <div class="flex">
+                    <div class="bg-sky-500 text-white p-1.5 pb-0">
+                        <svg class="copied w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                        <svg class="nocopy w-6 h-6" title="copy" fill='none' stroke='white' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'>
+                            <path stroke-linecap='round' stroke-linejoin='round' stroke-width='1' d='M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2'></path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+<p>Then enable Open API, Swagger UI, ServiceStack's support for Swagger UI and the JWT Bearer Auth option:</p>
+<pre><code class="language-csharp">public class ConfigureOpenApi : IHostingStartup
+{
+    public void Configure(IWebHostBuilder builder) =&gt; builder
+        .ConfigureServices((context, services) =&gt; {
+            if (context.HostingEnvironment.IsDevelopment())
+            {
+                services.AddEndpointsApiExplorer();
+                services.AddSwaggerGen();
+                services.AddServiceStackSwagger();
+                services.AddJwtAuth();
+                //services.AddBasicAuth&lt;Data.ApplicationUser&gt;();
+            
+                services.AddTransient&lt;IStartupFilter,StartupFilter&gt;();
+            }
+        });
+
+    public class StartupFilter : IStartupFilter
+    {
+        public Action&lt;IApplicationBuilder&gt; Configure(Action&lt;IApplicationBuilder&gt; next)
+            =&gt; app =&gt; {
+                // Provided by Swashbuckle library
+                app.UseSwagger();
+                app.UseSwaggerUI();
+                next(app);
+            };
+    }
+}
+</code></pre>
+<p>This will enable the <strong>Authorize</strong> button in Swagger UI where you can authenticate with a JWT Token:</p>
+<p><img src="https://servicestack.net/img/posts/jwt-identity-auth/jwt-swagger-ui.png" alt="" /></p>
+<h3 id="jwt-auth-in-built-in-uis">JWT Auth in Built-in UIs<a class="header-anchor" href="javascript:;" onclick="location.hash='#jwt-auth-in-built-in-uis'" aria-label="Permalink">&ZeroWidthSpace;</a></h3>
+<p>This also enables the <strong>JWT</strong> Auth Option in ServiceStack's built-in
+<a href="https://docs.servicestack.net/api-explorer">API Explorer</a>,
+<a href="https://docs.servicestack.net/locode/">Locode</a> and
+<a href="https://docs.servicestack.net/admin-ui">Admin UIs</a>:</p>
+<img class="shadow p-1" src="https://servicestack.net/img/posts/jwt-identity-auth/jwt-api-explorer.png">
+<h3 id="authenticating-with-jwt">Authenticating with JWT<a class="header-anchor" href="javascript:;" onclick="location.hash='#authenticating-with-jwt'" aria-label="Permalink">&ZeroWidthSpace;</a></h3>
+<p>JWT Identity Auth is a drop-in replacement for ServiceStack's JWT AuthProvider where Authenticating via Credentials
+will convert the Authenticated User into a JWT Bearer Token returned in the <strong>HttpOnly</strong>, <strong>Secure</strong> <code>ss-tok</code> Cookie
+that will be used to Authenticate the client:</p>
+<pre><code class="language-csharp">var client = new JsonApiClient(BaseUrl);
+await client.SendAsync(new Authenticate {
+    provider = &quot;credentials&quot;,
+    UserName = Username,
+    Password = Password,
+});
+
+var bearerToken = client.GetTokenCookie(); // ss-tok Cookie
+</code></pre>
+<h2 id="jwt-refresh-tokens">JWT Refresh Tokens<a class="header-anchor" href="javascript:;" onclick="location.hash='#jwt-refresh-tokens'" aria-label="Permalink">&ZeroWidthSpace;</a></h2>
+<p>Refresh Tokens can be used to allow users to request a new JWT Access Token when the current one expires.</p>
+<p>To enable support for JWT Refresh Tokens your <code>IdentityUser</code> model should implement the <code>IRequireRefreshToken</code> interface
+which will be used to store the 64 byte Base64 URL-safe <code>RefreshToken</code> and its <code>RefreshTokenExpiry</code> in its persisted properties:</p>
+<pre><code class="language-csharp">public class ApplicationUser : IdentityUser, IRequireRefreshToken
+{
+    public string? RefreshToken { get; set; }
+    public DateTime? RefreshTokenExpiry { get; set; }
+}
+</code></pre>
+<p>Now after successful authentication, the <code>RefreshToken</code> will also be returned in the <code>ss-reftok</code> Cookie:</p>
+<pre><code class="language-csharp">var refreshToken = client.GetRefreshTokenCookie(); // ss-reftok Cookie
+</code></pre>
+<h3 id="transparent-server-auto-refresh-of-jwt-tokens">Transparent Server Auto Refresh of JWT Tokens<a class="header-anchor" href="javascript:;" onclick="location.hash='#transparent-server-auto-refresh-of-jwt-tokens'" aria-label="Permalink">&ZeroWidthSpace;</a></h3>
+<p>To be able to terminate a users access, Users need to revalidate their eligibility to verify they're still allowed access
+(e.g. deny Locked out users). This JWT revalidation pattern is implemented using Refresh Tokens which are used to request
+revalidation of their access and reissuing a new JWT Access Token which can be used to make authenticated requests until it expires.</p>
+<p>As Cookies are used to return Bearer and Refresh Tokens ServiceStack is able to implement the revalidation logic on the
+server where it transparently validates Refresh Tokens, and if a User is eligible will reissue a new JWT Token Cookie that
+replaces the expired Access Token Cookie.</p>
+<p>Thanks to this behavior HTTP Clients will be able to Authenticate with just the Refresh Token, which will transparently
+reissue a new JWT Access Token Cookie and then continue to perform the Authenticated Request:</p>
+<pre><code class="language-csharp">var client = new JsonApiClient(BaseUrl);
+client.SetRefreshTokenCookie(RefreshToken);
+
+var response = await client.SendAsync(new Secured { ... });
+</code></pre>
+<p>There's also opt-in sliding support for extending a User's RefreshToken after usage which allows Users to treat
+their Refresh Token like an API Key where it will continue extending whilst they're continuously using it to make API requests,
+otherwise expires if they stop. How long to extend the expiry of Refresh Tokens after usage can be configured with:</p>
+<pre><code class="language-csharp">options.JwtAuth(x =&gt; {
+    // How long to extend the expiry of Refresh Tokens after usage (default None)
+    x.ExtendRefreshTokenExpiryAfterUsage = TimeSpan.FromDays(90);
+});
+</code></pre>
+<h2 id="convert-session-to-token-service">Convert Session to Token Service<a class="header-anchor" href="javascript:;" onclick="location.hash='#convert-session-to-token-service'" aria-label="Permalink">&ZeroWidthSpace;</a></h2>
+<p>Another useful Service that's available is being able to Convert your current Authenticated Session into a Token
+with the <code>ConvertSessionToToken</code> Service which can be enabled with:</p>
+<pre><code class="language-csharp">options.JwtAuth(x =&gt; {
+    x.IncludeConvertSessionToTokenService = true;
+});
+</code></pre>
+<p>This can be useful for when you want to Authenticate via an external OAuth Provider that you then want to convert into a stateless
+JWT Token by calling the <code>ConvertSessionToToken</code> on the client, e.g:</p>
+<h4 id="net-clients">.NET Clients<a class="header-anchor" href="javascript:;" onclick="location.hash='#net-clients'" aria-label="Permalink">&ZeroWidthSpace;</a></h4>
+<pre><code class="language-csharp">await client.SendAsync(new ConvertSessionToToken());
+</code></pre>
+<h4 id="typescriptjavascript">TypeScript/JavaScript<a class="header-anchor" href="javascript:;" onclick="location.hash='#typescriptjavascript'" aria-label="Permalink">&ZeroWidthSpace;</a></h4>
+<pre><code class="language-ts">fetch('/session-to-token', { method:'POST', credentials:'include' })
+</code></pre>
+<p>The default behavior of <code>ConvertSessionToToken</code> is to remove the Current Session from the Auth Server which will prevent
+access to protected Services using our previously Authenticated Session. If you still want to preserve your existing Session
+you can indicate this with:</p>
+<pre><code class="language-csharp">await client.SendAsync(new ConvertSessionToToken { 
+    PreserveSession = true 
+});
+</code></pre>
+<h3 id="jwt-options">JWT Options<a class="header-anchor" href="javascript:;" onclick="location.hash='#jwt-options'" aria-label="Permalink">&ZeroWidthSpace;</a></h3>
+<p>Other configuration options available for Identity JWT Auth include:</p>
+<pre><code class="language-csharp">options.JwtAuth(x =&gt; {
+    // How long should JWT Tokens be valid for. (default 14 days)
+    x.ExpireTokensIn = TimeSpan.FromDays(14);
+    
+    // How long should JWT Refresh Tokens be valid for. (default 90 days)
+    x.ExpireRefreshTokensIn = TimeSpan.FromDays(90);
+    
+    x.OnTokenCreated = (req, user, claims) =&gt; {
+        // Customize which claims are included in the JWT Token
+    };
+    
+    // Whether to invalidate Refresh Tokens on Logout (default true)
+    x.InvalidateRefreshTokenOnLogout = true;
+    
+    // How long to extend the expiry of Refresh Tokens after usage (default None)
+    x.ExtendRefreshTokenExpiryAfterUsage = null;
+});
+</code></pre>
+
+                </div>
+            </div>
+        </article>
+</div>
+
+        <div class="bg-gray-50 dark:bg-red-400 py-20">
+            <div class="max-w-3xl mx-auto">
+                <div class="flex justify-between">
+                    <div>
+                            <a href="posts/author/brandon-foley"><img class="w-20 h-20 rounded-full text-cyan-600" src="img/authors/author3.svg"></a>
+
+                        <div class="mt-2 font-medium text-2xl text-gray-600">
+                            Written by Brandon Foley
+                        </div>
+                        <div class="text-gray-600">
+                            I am a programmer at heart. I like to tinker with code and build generic coding structures.
+                        </div>
+                    </div>
+                    <div class="flex items-end">
+            <ul role="list" class="flex">
+                    <li>
+                        <a title="Follow on GitHub" class="mr-1 group flex text-sm font-medium text-zinc-800 transition hover:text-indigo-500 dark:text-zinc-200 dark:hover:text-indigo-500" href="https://github.com/brandon">
+                            <svg viewBox="0 0 24 24" aria-hidden="true" class="h-6 w-6 flex-none text-zinc-500 fill-zinc-500 transition group-hover:fill-indigo-500">
+                                <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.475 2 2 6.588 2 12.253c0 4.537 2.862 8.369 6.838 9.727.5.09.687-.218.687-.487 0-.243-.013-1.05-.013-1.91C7 20.059 6.35 18.957 6.15 18.38c-.113-.295-.6-1.205-1.025-1.448-.35-.192-.85-.667-.013-.68.788-.012 1.35.744 1.538 1.051.9 1.551 2.338 1.116 2.912.846.088-.666.35-1.115.638-1.371-2.225-.256-4.55-1.14-4.55-5.062 0-1.115.387-2.038 1.025-2.756-.1-.256-.45-1.307.1-2.717 0 0 .837-.269 2.75 1.051.8-.23 1.65-.346 2.5-.346.85 0 1.7.115 2.5.346 1.912-1.333 2.75-1.05 2.75-1.05.55 1.409.2 2.46.1 2.716.637.718 1.025 1.628 1.025 2.756 0 3.934-2.337 4.806-4.562 5.062.362.32.675.936.675 1.897 0 1.371-.013 2.473-.013 2.82 0 .268.188.589.688.486a10.039 10.039 0 0 0 4.932-3.74A10.447 10.447 0 0 0 22 12.253C22 6.588 17.525 2 12 2Z"></path>
+                            </svg>
+                        </a>
+                    </li>
+                    <li>
+                        <a title="Email Brandon Foley" href="mailto:brandon@email.org" class="mr-1 group flex text-sm font-medium text-zinc-800 transition hover:text-indigo-500 dark:text-zinc-200 dark:hover:text-indigo-500">
+                            <svg class="h-6 w-6 flex-none text-zinc-500 fill-zinc-500 transition group-hover:fill-indigo-500" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M4 20q-.825 0-1.413-.588T2 18V6q0-.825.588-1.413T4 4h16q.825 0 1.413.588T22 6v12q0 .825-.588 1.413T20 20H4Zm8-7L4 8v10h16V8l-8 5Zm0-2l8-5H4l8 5ZM4 8V6v12V8Z"/></svg>
+                        </a>
+                    </li>
+            </ul>
+                    </div>
+                </div>
+
+                <div class="mt-4 border-t">
+                    <div class="py-8 text-lg text-gray-700 font-medium">
+                        More from Brandon Foley
+                    </div>
+                    <div class="grid grid-cols-2 gap-8">
+                            <div>
+                                <div class="flex flex-col overflow-hidden">
+                                    <div class="flex-shrink-0">
+                                        <a href="posts/openapi-v3">
+                                            <img class="h-48 w-full object-cover" src="https://images.unsplash.com/photo-1496478981722-3ae516118a04?ixlib=rb-1.2.1&amp;ixid=eyJhcHBfaWQiOjEyMDd9&amp;auto=format&amp;fit=crop&amp;w=420&amp;q=80" alt="">
+                                        </a>
+                                    </div>
+                                    <div class="flex flex-1 flex-col justify-between bg-white dark:bg-gray-900 p-6">
+                                        <div class="flex-1">
+                                            <p class="text-sm font-medium text-indigo-600 dark:text-indigo-300">
+                                                Article
+                                            </p>
+                                            <a href="posts/openapi-v3" class="mt-2 block">
+                                                <p class="text-xl font-semibold text-gray-900 dark:text-gray-50 whitespace-nowrap overflow-hidden text-ellipsis" title="OpenAPI v3 and Swagger UI">
+                                                    OpenAPI v3 and Swagger UI
+                                                </p>
+                                                <p class="mt-3 text-base text-gray-500">A walkthrough of the new OpenAPI v3 support in ServiceStack 8.1</p>
+                                            </a>
+                                        </div>
+                                        <div class="mt-6 flex items-center">
+                                            <div class="flex-shrink-0">
+                                                <a href="">
+                                                    <span class="sr-only">Brandon Foley</span>
+                                                    <img class="h-10 w-10 rounded-full" src="img/authors/author3.svg" alt="OpenAPI v3 and Swagger UI background">
+                                                </a>
+                                            </div>
+                                            <div class="ml-3">
+                                                <p class="text-sm font-medium text-gray-900">
+                                                        <a href="posts/author/brandon-foley" class="hover:underline">Brandon Foley</a>
+                                                </p>
+                                                <div class="flex space-x-1 text-sm text-gray-500">
+                                                    <time datetime="2024-02-08T00:00:00.0000000">February 8, 2024</time>
+                                                    <span aria-hidden="true">&middot;</span>
+                                                    <span>6 min read</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div>
+                                <div class="flex flex-col overflow-hidden">
+                                    <div class="flex-shrink-0">
+                                        <a href="posts/javascript">
+                                            <img class="h-48 w-full object-cover" src="https://images.unsplash.com/photo-1497515114629-f71d768fd07c?ixlib=rb-1.2.1&amp;ixid=eyJhcHBfaWQiOjEyMDd9&amp;auto=format&amp;fit=crop&amp;w=420&amp;q=80" alt="">
+                                        </a>
+                                    </div>
+                                    <div class="flex flex-1 flex-col justify-between bg-white dark:bg-gray-900 p-6">
+                                        <div class="flex-1">
+                                            <p class="text-sm font-medium text-indigo-600 dark:text-indigo-300">
+                                                Article
+                                            </p>
+                                            <a href="posts/javascript" class="mt-2 block">
+                                                <p class="text-xl font-semibold text-gray-900 dark:text-gray-50 whitespace-nowrap overflow-hidden text-ellipsis" title="Simple, Modern JavaScript">
+                                                    Simple, Modern JavaScript
+                                                </p>
+                                                <p class="mt-3 text-base text-gray-500">Learn about JS Modules, Vue 3 and available rich UI Components</p>
+                                            </a>
+                                        </div>
+                                        <div class="mt-6 flex items-center">
+                                            <div class="flex-shrink-0">
+                                                <a href="">
+                                                    <span class="sr-only">Brandon Foley</span>
+                                                    <img class="h-10 w-10 rounded-full" src="img/authors/author3.svg" alt="Simple, Modern JavaScript background">
+                                                </a>
+                                            </div>
+                                            <div class="ml-3">
+                                                <p class="text-sm font-medium text-gray-900">
+                                                        <a href="posts/author/brandon-foley" class="hover:underline">Brandon Foley</a>
+                                                </p>
+                                                <div class="flex space-x-1 text-sm text-gray-500">
+                                                    <time datetime="2023-02-01T00:00:00.0000000">February 1, 2023</time>
+                                                    <span aria-hidden="true">&middot;</span>
+                                                    <span>15 min read</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div>
+                                <div class="flex flex-col overflow-hidden">
+                                    <div class="flex-shrink-0">
+                                        <a href="posts/hetzner-cloud">
+                                            <img class="h-48 w-full object-cover" src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?ixlib=rb-1.2.1&amp;ixid=eyJhcHBfaWQiOjEyMDd9&amp;auto=format&amp;fit=crop&amp;w=420&amp;q=80" alt="">
+                                        </a>
+                                    </div>
+                                    <div class="flex flex-1 flex-col justify-between bg-white dark:bg-gray-900 p-6">
+                                        <div class="flex-1">
+                                            <p class="text-sm font-medium text-indigo-600 dark:text-indigo-300">
+                                                Article
+                                            </p>
+                                            <a href="posts/hetzner-cloud" class="mt-2 block">
+                                                <p class="text-xl font-semibold text-gray-900 dark:text-gray-50 whitespace-nowrap overflow-hidden text-ellipsis" title="In pursuit of the best value US cloud provider">
+                                                    In pursuit of the best value US cloud provider
+                                                </p>
+                                                <p class="mt-3 text-base text-gray-500">We&#x27;ve been using AWS at ServiceStack for 10&#x2B; years, it&#x27;s served us well but suffers from complex &amp; expensive pricing</p>
+                                            </a>
+                                        </div>
+                                        <div class="mt-6 flex items-center">
+                                            <div class="flex-shrink-0">
+                                                <a href="">
+                                                    <span class="sr-only">Brandon Foley</span>
+                                                    <img class="h-10 w-10 rounded-full" src="img/authors/author3.svg" alt="In pursuit of the best value US cloud provider background">
+                                                </a>
+                                            </div>
+                                            <div class="ml-3">
+                                                <p class="text-sm font-medium text-gray-900">
+                                                        <a href="posts/author/brandon-foley" class="hover:underline">Brandon Foley</a>
+                                                </p>
+                                                <div class="flex space-x-1 text-sm text-gray-500">
+                                                    <time datetime="2022-09-06T00:00:00.0000000">September 6, 2022</time>
+                                                    <span aria-hidden="true">&middot;</span>
+                                                    <span>13 min read</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+<script type="module">
+import { init } from "app.mjs"
+init()
+</script>
+
+<link rel="stylesheet" href="css/highlight.css">
+<script src="lib/js/highlight.js"></script>
+<script>hljs.highlightAll()</script>
+<script src="lib/js/lite-yt-embed.js"></script>
+<script src="mjs/docs.mjs" type="module"></script>
+
+<script type="module">
+import { mount } from "app.mjs"
+
+    const App = {
+        setup() {
+            function nav(url) {
+                window.open(url)
+            }
+            return { nav }
+        }
+    }
+    mount('#post', App)
+</script>
+
+    </main>
+</div>
+
+<footer class="bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800">
+    <div class="mx-auto max-w-7xl overflow-hidden py-20 px-6 sm:py-24 lg:px-8">
+        <nav class="-mb-6 columns-2 sm:flex sm:justify-center sm:space-x-12" aria-label="Footer">
+            <div class="pb-6">
+                <a href="whatsnew" class="text-sm leading-6 text-gray-600 hover:text-gray-900 dark:hover:text-gray-50">What's New</a>
+            </div>
+
+            <div class="pb-6">
+                <a href="blog" class="text-sm leading-6 text-gray-600 hover:text-gray-900 dark:hover:text-gray-50">Blog</a>
+            </div>
+
+            <div class="pb-6">
+                <a href="posts" class="text-sm leading-6 text-gray-600 hover:text-gray-900 dark:hover:text-gray-50">Archive</a>
+            </div>
+
+            <div class="pb-6">
+                <a href="speaking" class="text-sm leading-6 text-gray-600 hover:text-gray-900 dark:hover:text-gray-50">Speaking</a>
+            </div>
+
+            <div class="pb-6">
+                <a href="uses" class="text-sm leading-6 text-gray-600 hover:text-gray-900 dark:hover:text-gray-50">Uses</a>
+            </div>
+
+            <div class="pb-6">
+                <a href="about" class="text-sm leading-6 text-gray-600 hover:text-gray-900 dark:hover:text-gray-50">About</a>
+            </div>
+
+            <div class="pb-6">
+                <a href="privacy" class="text-sm leading-6 text-gray-600 hover:text-gray-900 dark:hover:text-gray-50">Swag</a>
+            </div>
+        </nav>
+        <div class="mt-10 flex justify-center space-x-10">
+            <a href="https://www.linkedin.com/in/keegan-hauser/" class="text-gray-400 hover:text-gray-500">
+                <span class="sr-only">LinkedIn</span>
+                <svg viewBox="0 0 24 24" aria-hidden="true" class="h-6 w-6" fill="currentColor">
+                    <path d="M18.335 18.339H15.67v-4.177c0-.996-.02-2.278-1.39-2.278-1.389 0-1.601 1.084-1.601 2.205v4.25h-2.666V9.75h2.56v1.17h.035c.358-.674 1.228-1.387 2.528-1.387 2.7 0 3.2 1.778 3.2 4.091v4.715zM7.003 8.575a1.546 1.546 0 01-1.548-1.549 1.548 1.548 0 111.547 1.549zm1.336 9.764H5.666V9.75H8.34v8.589zM19.67 3H4.329C3.593 3 3 3.58 3 4.297v15.406C3 20.42 3.594 21 4.328 21h15.338C20.4 21 21 20.42 21 19.703V4.297C21 3.58 20.4 3 19.666 3h.003z"></path>
+                </svg>
+            </a>
+
+            <a href="https://github.com/keeganhauser" class="text-gray-400 hover:text-gray-500">
+                <span class="sr-only">GitHub</span>
+                <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd" />
+                </svg>
+            </a>
+
+            <a href="mailto:keegan.hauser@outlook.com" class="text-gray-400 hover:text-gray-500">
+                <span class="sr-only">Email</span>
+                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" class="h-6 w-6">
+                    <path fill-rule="evenodd" d="M6 5a3 3 0 0 0-3 3v8a3 3 0 0 0 3 3h12a3 3 0 0 0 3-3V8a3 3 0 0 0-3-3H6Zm.245 2.187a.75.75 0 0 0-.99 1.126l6.25 5.5a.75.75 0 0 0 .99 0l6.25-5.5a.75.75 0 0 0-.99-1.126L12 12.251 6.245 7.187Z"></path>
+                </svg>
+            </a>
+        </div>
+    </div>
+</footer>
+
+<script type="module">
+import { init } from "app.mjs"
+init()
+</script>
+
+
+
+</body>
+</html>
