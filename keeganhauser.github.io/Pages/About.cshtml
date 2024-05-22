@@ -1,0 +1,67 @@
+﻿@page "/about"
+@attribute [RenderStatic]
+@{
+    ViewData["Title"] = "About Us";
+}
+
+<div class="sm:px-8 mt-16 sm:mt-32">
+    <div class="mx-auto max-w-7xl lg:px-8">
+        <div class="relative px-4 sm:px-8 lg:px-12">
+            <div class="mx-auto max-w-2xl lg:max-w-5xl">
+                <div class="grid grid-cols-1 gap-y-16 lg:grid-cols-2 lg:grid-rows-[auto_1fr] lg:gap-y-12">
+                    <div class="lg:pl-20">
+                        <div class="max-w-xs px-2.5 lg:max-w-none">
+                            <img alt="" sizes="(min-width: 1024px) 32rem, 20rem" srcset="img/self.png" width="800" height="800" decoding="async" data-nimg="1" class="aspect-square rotate-3 rounded-2xl bg-zinc-100 object-cover dark:bg-zinc-800" loading="lazy" style="color: transparent;">
+                        </div>
+                    </div>
+                    <div class="lg:order-first lg:row-span-2">
+                        <h1 class="text-4xl font-bold tracking-tight text-zinc-800 dark:text-zinc-100 sm:text-5xl">About me:</h1>
+                        <div class="mt-6 space-y-7 text-zinc-600 dark:text-zinc-400">
+
+<link rel="stylesheet" href="css/typography.css">
+<markdown class="prose">
+Hi! I'm Keegan, and I'm a 21 y/o senior in college majoring in software engineering and minoring in applied math! I'll be graduating in June 2024, and hope to find some interesting work along the West Coast.
+
+I decided to make a little blog/showcase to show off some of the things I've learned and created. I mostly work in C#, but also use other languages (to varying proficiencies) like C, C++, Python, and Rust. Most of my experience is certainly in C++ and C#.
+
+For the most case I tend to be interested in topics including game development, computer graphics, operating systems, and compilers.
+
+Here is a list of things I'm at least somewhat competent in:  
+**Languages:**
+- C++
+- C#
+- C
+- Python
+- Rust
+- Lua
+
+**Libraries/Frameworks:**
+- Unity
+- MonoGame
+- Love2D
+- SDL2
+- Bevy
+- WPF
+- .NET Maui
+- WinForms
+
+**Other tools/technologies:**
+- Git
+- SQL (SQL Server and MySQL)
+- MariaDB
+- Visual Studio
+- VS Code
+- Various math/science Python libraries (numpy, scipy, pandas, etc.)
+- WSL (Ubuntu)
+</markdown>
+
+                        </div>
+                    </div>
+                    <div class="lg:pl-20">
+                        @await Html.PartialAsync("FollowLinks")
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
